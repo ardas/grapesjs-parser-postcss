@@ -68,6 +68,7 @@ export default (css: string, editor: Editor, plugins: AcceptedPlugin[] = []) => 
   const result: ParsedRule[] = [];
   log(editor, ['Input CSS', css]);
 
+  console.log('grapesjs-parser-postcss plugins right before', plugins);
   const ast = postcss(plugins).process(css).sync().root;
   log(editor, ['PostCSS AST', ast]);
 

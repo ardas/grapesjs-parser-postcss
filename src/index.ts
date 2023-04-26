@@ -7,8 +7,13 @@ export type ParserPostCSSConfig = {
 };
 
 const plugin: grapesjs.Plugin = (editor, config = {}) => {
+  console.log('grapesjs-parser-postcss config', config);
   const { plugins = [] } = config as ParserPostCSSConfig;
-  editor.setCustomParserCss((css: string) => parser(css, editor, plugins));
+  console.log('grapesjs-parser-postcss plugins', plugins);
+  editor.setCustomParserCss((css: string) => {
+    console.log('grapesjs-parser-postcss callback');
+    return parser(css, editor, plugins)
+  });
 };
 
 export default plugin;
