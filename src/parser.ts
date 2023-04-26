@@ -1,5 +1,5 @@
 import type grapesjs from 'grapesjs';
-import postcss, { Rule, AtRule, Declaration } from 'postcss';
+import postcss, { Rule, AtRule, Declaration, AcceptedPlugin } from 'postcss';
 
 export type ParsedRule = {
   selectors: string;
@@ -64,11 +64,11 @@ export const createAtRule = (node: AtRule, result: ParsedRule[]) => {
   }
 };
 
-export default (css: string, editor: Editor) => {
+export default (css: string, editor: Editor, plugins: AcceptedPlugin[] = []) => {
   const result: ParsedRule[] = [];
   log(editor, ['Input CSS', css]);
 
-  const ast = postcss().process(css).sync().root;
+  const ast = postcss(plugins).process(css).sync().root;
   log(editor, ['PostCSS AST', ast]);
 
   ast.nodes.forEach(node => {

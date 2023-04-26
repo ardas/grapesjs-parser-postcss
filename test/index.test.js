@@ -1,4 +1,17 @@
+import postcss from 'postcss';
+
+import plugin from './../src/index';
 import parser from './../src/parser';
+
+jest.mock('postcss', () => {
+  const originalModule = jest.requireActual('postcss');
+  jest.spyOn(originalModule, 'default');
+
+  return {
+    __esModule: true,
+    ...originalModule,
+  };
+});
 
 describe('Parser', () => {
 
@@ -161,6 +174,23 @@ describe('Parser', () => {
         },
       },
     ]);
+  });
+
+  it('registers custom css parser and passes plugins to postcss', () => {
+    const editor = { 
+      setCustomParserCss: jest.fn(), 
+      log: jest.fn() 
+    };
+    const plugins = [
+      { postcssPlugin: 'plugin1', Once: () => {} },
+      { postcssPlugin: 'second-plugin', Once: () => {} },
+    ];
+    const css = 'body { background-color: lightgreen; }';
+
+    plugin(editor, { plugins });
+    expect(editor.setCustomParserCss).toHaveBeenCalled();
+    editor.setCustomParserCss.mock.calls[0][0](css);
+    expect(postcss).toHaveBeenCalledWith(plugins);
   });
 
 })
